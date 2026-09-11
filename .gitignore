@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+.env
+.env.local
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# Copias que deja la app de Claude al entregar ficheros
+Claude outputs/
