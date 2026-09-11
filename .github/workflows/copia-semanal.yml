@@ -1,0 +1,81 @@
+name: Copia de seguridad semanal
+
+# Se ejecuta sola los lunes de madrugada y también a mano cuando quieras,
+# desde la pestaña Actions del repositorio.
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+# El commit lo hace el propio flujo, así que necesita poder escribir
+permissions:
+  contents: write
+
+jobs:
+  copia:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+        with:
+          # Con tu token personal, el commit cuenta como actividad tuya y
+          # GitHub no desactiva este flujo por llevar 60 días sin tocar nada
+          token: ${{ secrets.TOKEN_COMMIT }}
+
+      - name: Instalar la herramienta de Supabase
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Volcar la base de datos
+        env:
+          URL_BASE_DATOS: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir -p copias
+
+          # La estructura de las tablas, por un lado
+          supabase db dump --db-url "$URL_BASE_DATOS" -f estructura.sql
+
+          # Y todos los datos, por otro
+          supabase db dump --db-url "$URL_BASE_DATOS" --data-only -f datos.sql
+
+          # Se juntan en un solo fichero con la fecha dentro
+          {
+            echo "-- Copia de Panel DJ"
+            echo "-- Generada el $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo ""
+            cat estructura.sql
+            echo ""
+            cat datos.sql
+          } > copia.sql
+
+          echo "Tamaño del volcado: $(du -h copia.sql | cut -f1)"
+
+      - name: Cifrar la copia
+        env:
+          CLAVE: ${{ secrets.CLAVE_COPIA }}
+        run: |
+          gpg --batch --yes --passphrase "$CLAVE" \
+              --symmetric --cipher-algo AES256 \
+              -o copias/copia.sql.gpg copia.sql
+
+          # El fichero sin cifrar no se sube nunca
+          rm -f copia.sql estructura.sql datos.sql
+
+          echo "Copia cifrada: $(du -h copias/copia.sql.gpg | cut -f1)"
+
+      - name: Guardar la copia en el repositorio
+        run: |
+          git config user.name "Copia automática"
+          git config user.email "actions@github.com"
+          git add copias/copia.sql.gpg
+
+          # Si esta semana no ha cambiado nada, no hay nada que guardar
+          if git diff --staged --quiet; then
+            echo "Sin cambios respecto a la copia anterior."
+          else
+            git commit -m "Copia de seguridad del $(date -u '+%Y-%m-%d')"
+            git push
+            echo "Copia guardada."
+          fi
