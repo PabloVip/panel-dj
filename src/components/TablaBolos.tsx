@@ -106,6 +106,12 @@ export default function TablaBolos(props: Propiedades) {
     );
   }
 
+  // Flecha del botón de orden en móvil
+  let flechaDelOrden = "↑";
+  if (descendente === true) {
+    flechaDelOrden = "↓";
+  }
+
   if (props.bolos.length === 0) {
     return (
       <div className="rounded-2xl border border-borde bg-superficie p-6">
@@ -118,21 +124,114 @@ export default function TablaBolos(props: Propiedades) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-borde bg-superficie">
-      <div className="flex items-center justify-between border-b border-borde px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-borde px-4 py-3">
         <span className="text-sm text-textoSecundario">
           {props.bolos.length} bolos
         </span>
-        <button
-          type="button"
-          onClick={abrirNuevo}
-          className="rounded-lg bg-acento px-3 py-1.5 text-sm font-medium text-white transition hover:bg-acentoSuave"
-        >
-          Nuevo bolo
-        </button>
+
+        <span className="flex items-center gap-2">
+          {/* En móvil no hay columnas que pulsar, así que el orden va aquí */}
+          <select
+            className="rounded-lg border border-borde bg-fondo px-2 py-1.5 text-xs text-textoSecundario sm:hidden"
+            value={campo}
+            onChange={(evento) => establecerCampo(evento.target.value as Campo)}
+          >
+            <option value="fecha">Por fecha</option>
+            <option value="precio">Por precio</option>
+            <option value="nombre">Por nombre</option>
+            <option value="estado">Por estado</option>
+          </select>
+
+          <button
+            type="button"
+            onClick={() => establecerDescendente(!descendente)}
+            className="rounded-lg border border-borde px-2 py-1.5 text-xs text-textoSecundario sm:hidden"
+          >
+            {flechaDelOrden}
+          </button>
+
+          <button
+            type="button"
+            onClick={abrirNuevo}
+            className="rounded-lg bg-acento px-3 py-1.5 text-sm font-medium text-white transition hover:bg-acentoSuave"
+          >
+            Nuevo bolo
+          </button>
+        </span>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-sm">
+      {/* --- Móvil: una tarjeta por bolo, sin nada que se salga --- */}
+      <div className="flex flex-col sm:hidden">
+        {ordenados.map((bolo) => {
+          let clasesFila = "border-b border-borde p-3 text-left";
+          if (bolo.fecha === props.hoy) {
+            clasesFila = clasesFila + " bg-acento/5";
+          }
+
+          return (
+            <button
+              key={bolo.id}
+              type="button"
+              onClick={() => abrirEdicion(bolo)}
+              className={clasesFila}
+            >
+              <span className="flex items-start justify-between gap-3">
+                <span className="min-w-0">
+                  <span className="block font-medium">{bolo.nombre}</span>
+                  {bolo.ubicacion !== null && (
+                    <span className="block text-xs text-textoSecundario">
+                      {bolo.ubicacion}
+                    </span>
+                  )}
+                </span>
+
+                <span className="shrink-0 text-right">
+                  <span className="block font-medium">
+                    {formatearEuros(Number(bolo.precio))}
+                  </span>
+                  {tieneComision(bolo) === true && (
+                    <span className="block text-[11px] text-textoSecundario">
+                      neto {formatearEuros(netoDe(bolo))}
+                    </span>
+                  )}
+                </span>
+              </span>
+
+              <span className="mt-2 flex flex-wrap items-center gap-2 text-xs text-textoSecundario">
+                <span>
+                  {formatearFechaCorta(bolo.fecha)} {bolo.fecha.slice(0, 4)}
+                </span>
+                <span>·</span>
+                <span>{formatearRangoHorario(bolo.hora_inicio, bolo.hora_fin)}</span>
+              </span>
+
+              <span className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                <span
+                  className={
+                    "rounded px-1.5 py-0.5 " + clasesEtiquetaEstado(bolo.estado)
+                  }
+                >
+                  {etiquetaEstado(bolo.estado)}
+                </span>
+                {bolo.cobrado === false && bolo.estado !== "cancelado" && (
+                  <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-amber-300">
+                    Sin cobrar
+                  </span>
+                )}
+                {bolo.cobrado === true && (
+                  <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-emerald-300">
+                    Cobrado
+                  </span>
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* --- Pantalla grande: la tabla de siempre --- */}
+      <div className="hidden sm:block">
+        <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-borde">
               <Cabecera titulo="Fecha" campoColumna="fecha" />

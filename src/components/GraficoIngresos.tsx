@@ -113,14 +113,16 @@ export default function GraficoIngresos(props: Propiedades) {
 
       {/* Misma información en tabla, para leerla con cifras exactas */}
       <div className="overflow-x-auto">
-        <table className="mt-6 w-full min-w-[420px] text-left text-sm">
+        <table className="mt-6 w-full text-left text-sm">
           <thead>
             <tr className="text-xs uppercase tracking-wider text-textoSecundario">
               <th className="py-2 font-normal">Mes</th>
               <th className="py-2 text-right font-normal">Bolos</th>
               <th className="py-2 text-right font-normal">Bruto</th>
               {props.hayComisiones === true && (
-                <th className="py-2 text-right font-normal">Comisión</th>
+                <th className="hidden py-2 text-right font-normal sm:table-cell">
+                  Comisión
+                </th>
               )}
               <th className="py-2 text-right font-normal">Neto</th>
             </tr>
@@ -140,7 +142,7 @@ export default function GraficoIngresos(props: Propiedades) {
                     {formatearEuros(fila.bruto)}
                   </td>
                   {props.hayComisiones === true && (
-                    <td className="py-2 text-right text-textoSecundario">
+                    <td className="hidden py-2 text-right text-textoSecundario sm:table-cell">
                       {formatearEuros(fila.comisiones)}
                     </td>
                   )}

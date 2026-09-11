@@ -63,6 +63,12 @@ export default function ListaImpagos(props: Propiedades) {
           clasesAntiguedad = "text-amber-300";
         }
 
+        // Solo tiene sentido contar días en los bolos que ya se han tocado
+        let hayAntiguedad = false;
+        if (props.mostrarAntiguedad === true && dias > 0) {
+          hayAntiguedad = true;
+        }
+
         let textoBoton = "Marcar cobrado";
         if (pendiente === true && enCurso === bolo.id) {
           textoBoton = "Guardando...";
@@ -71,35 +77,39 @@ export default function ListaImpagos(props: Propiedades) {
         return (
           <article
             key={bolo.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-borde bg-superficie p-3"
+            className="rounded-xl border border-borde bg-superficie p-3"
           >
-            <div className="min-w-0">
-              <p className="truncate font-medium">{bolo.nombre}</p>
-              <p className="text-xs text-textoSecundario">
-                {formatearFechaCorta(bolo.fecha)} {bolo.fecha.slice(0, 4)}
-                {bolo.ubicacion !== null && " · " + bolo.ubicacion}
-              </p>
-              {props.mostrarAntiguedad === true && (
-                <p className={"mt-1 text-xs " + clasesAntiguedad}>
-                  {dias} días esperando el pago
-                </p>
-              )}
-            </div>
+            <p className="font-medium">{bolo.nombre}</p>
+            <p className="mt-0.5 text-xs text-textoSecundario">
+              {formatearFechaCorta(bolo.fecha)} {bolo.fecha.slice(0, 4)}
+              {bolo.ubicacion !== null && " · " + bolo.ubicacion}
+            </p>
 
-            <div className="flex items-center gap-3">
-              <span className="text-right font-medium text-acentoSuave">
-                {formatearEuros(Number(bolo.precio))}
+            {hayAntiguedad === true && (
+              <p className={"mt-1 text-xs " + clasesAntiguedad}>
+                {dias} días esperando el pago
+              </p>
+            )}
+
+            {/* Importe y botón siempre en la misma fila y en el mismo sitio,
+                sea cual sea lo largo que sea el nombre del bolo */}
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <span>
+                <span className="block font-medium text-acentoSuave">
+                  {formatearEuros(Number(bolo.precio))}
+                </span>
                 {tieneComision(bolo) === true && (
-                  <span className="block text-[11px] font-normal text-textoSecundario">
+                  <span className="block text-[11px] text-textoSecundario">
                     neto {formatearEuros(netoDe(bolo))}
                   </span>
                 )}
               </span>
+
               <button
                 type="button"
                 onClick={() => cobrar(bolo.id)}
                 disabled={pendiente}
-                className="rounded-lg border border-emerald-500/40 px-3 py-1.5 text-xs text-emerald-300 transition hover:bg-emerald-500/10 disabled:opacity-60"
+                className="shrink-0 rounded-lg border border-emerald-500/40 px-3 py-2 text-xs text-emerald-300 transition hover:bg-emerald-500/10 disabled:opacity-60"
               >
                 {textoBoton}
               </button>
