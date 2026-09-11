@@ -2,11 +2,12 @@
 
 import TarjetaBolo from "./TarjetaBolo";
 import { formatearFechaLarga, nombreDiaLargo, textoRelativo } from "@/lib/formato";
-import type { Bolo } from "@/lib/tipos";
+import type { Bolo, Sala } from "@/lib/tipos";
 
 type Propiedades = {
   bolos: Bolo[];
   hoy: string;
+  salas: Sala[];
   alPulsarBolo: (bolo: Bolo) => void;
 };
 
@@ -69,6 +70,8 @@ export default function ListaAgenda(props: Propiedades) {
                   key={bolo.id}
                   bolo={bolo}
                   alPulsar={props.alPulsarBolo}
+                  salas={props.salas}
+                  mostrarCamino
                 />
               ))}
             </div>

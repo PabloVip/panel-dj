@@ -51,6 +51,7 @@ export async function guardarSala(datos: FormData): Promise<Resultado> {
 
   const sala = {
     nombre: nombre,
+    direccion: textoONulo(datos.get("direccion")),
     contacto: textoONulo(datos.get("contacto")),
     telefono: textoONulo(datos.get("telefono")),
     cache_habitual: cache,

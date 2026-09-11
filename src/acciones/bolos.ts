@@ -148,6 +148,7 @@ export async function guardarBolo(datos: FormData): Promise<Resultado> {
   const datosComunes = {
     nombre: nombre,
     ubicacion: textoONulo(datos.get("ubicacion")),
+    direccion: textoONulo(datos.get("direccion")),
     hora_inicio: horaInicio,
     hora_fin: horaFin,
     precio: precio,

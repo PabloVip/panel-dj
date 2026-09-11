@@ -17,7 +17,9 @@ import {
 } from "@/lib/formato";
 import { colorEstado } from "@/lib/estados";
 import { netoDe, tieneComision, totalesDe } from "@/lib/calculos";
-import type { Bolo } from "@/lib/tipos";
+import { direccionDe, telefonoDe } from "@/lib/navegacion";
+import BotonesDeCamino from "@/components/BotonesDeCamino";
+import type { Bolo, Sala } from "@/lib/tipos";
 
 export const metadata: Metadata = {
   title: "Resumen",
@@ -70,7 +72,7 @@ export default async function PaginaInicio() {
   const supabase = await crearClienteServidor();
 
   // Tres consultas independientes, lanzadas a la vez
-  const [respuestaAnio, respuestaProximos, respuestaSinCobrar] = await Promise.all([
+  const [respuestaAnio, respuestaProximos, respuestaSinCobrar, respuestaSalas] = await Promise.all([
     supabase
       .from("bolos")
       .select("*")
@@ -90,6 +92,7 @@ export default async function PaginaInicio() {
       .eq("cobrado", false)
       .neq("estado", "cancelado")
       .limit(500),
+    supabase.from("salas").select("*"),
   ]);
 
   let bolosDelPeriodo: Bolo[] = [];
@@ -105,6 +108,19 @@ export default async function PaginaInicio() {
   let sinCobrar: Bolo[] = [];
   if (respuestaSinCobrar.data !== null) {
     sinCobrar = respuestaSinCobrar.data as Bolo[];
+  }
+
+  let salas: Sala[] = [];
+  if (respuestaSalas.data !== null) {
+    salas = respuestaSalas.data as Sala[];
+  }
+
+  // Lo de hoy va primero: es lo que se mira desde el coche
+  const bolosDeHoy: Bolo[] = [];
+  for (const bolo of proximos) {
+    if (bolo.fecha === hoy) {
+      bolosDeHoy.push(bolo);
+    }
   }
 
   // Repartimos los bolos del periodo en los grupos que interesan
@@ -194,6 +210,33 @@ export default async function PaginaInicio() {
           {nombreMes(mes)} de {anio}
         </p>
       </header>
+
+      {bolosDeHoy.map((bolo) => (
+        <article
+          key={bolo.id}
+          className="rounded-2xl border border-acento bg-acento/10 p-5"
+        >
+          <p className="text-xs uppercase tracking-wider text-acentoSuave">
+            Hoy tocas
+          </p>
+          <h2 className="mt-2 text-xl font-semibold">{bolo.nombre}</h2>
+          <p className="mt-1 text-sm text-textoSecundario">
+            {formatearRangoHorario(bolo.hora_inicio, bolo.hora_fin)}
+            {bolo.ubicacion !== null && " · " + bolo.ubicacion}
+            {" · "}
+            {formatearEuros(Number(bolo.precio))}
+          </p>
+
+          {bolo.notas !== null && (
+            <p className="mt-2 text-xs text-textoSecundario">{bolo.notas}</p>
+          )}
+
+          <BotonesDeCamino
+            direccion={direccionDe(bolo, salas)}
+            telefono={telefonoDe(bolo, salas)}
+          />
+        </article>
+      ))}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Tarjeta

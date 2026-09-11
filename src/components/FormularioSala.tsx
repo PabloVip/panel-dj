@@ -49,6 +49,7 @@ export default function FormularioSala(props: Propiedades) {
   }
 
   let valorNombre = "";
+  let valorDireccion = "";
   let valorContacto = "";
   let valorTelefono = "";
   let valorCache = "";
@@ -58,6 +59,7 @@ export default function FormularioSala(props: Propiedades) {
 
   if (props.sala !== null) {
     valorNombre = props.sala.nombre;
+    valorDireccion = props.sala.direccion ?? "";
     valorContacto = props.sala.contacto ?? "";
     valorTelefono = props.sala.telefono ?? "";
     valorCache = String(props.sala.cache_habitual);
@@ -108,6 +110,23 @@ export default function FormularioSala(props: Propiedades) {
             <p className="mt-1 text-xs text-textoSecundario">
               Escríbelo igual que en la ubicación de los bolos, así se cruzan
               con el histórico.
+            </p>
+          </div>
+
+          <div>
+            <label className="etiqueta" htmlFor="direccion">
+              Dirección
+            </label>
+            <input
+              id="direccion"
+              name="direccion"
+              className="campo"
+              defaultValue={valorDireccion}
+              placeholder="Av. de la Constitución 12, La Murada, Orihuela"
+            />
+            <p className="mt-1 text-xs text-textoSecundario">
+              Es la que usa el botón de “Cómo llegar” y la que va al
+              calendario del móvil para que el coche trace la ruta.
             </p>
           </div>
 

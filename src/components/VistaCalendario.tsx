@@ -237,7 +237,13 @@ export default function VistaCalendario(props: Propiedades) {
 
             <div className="mt-4 flex flex-col gap-2">
               {bolosDelDia.map((bolo) => (
-                <TarjetaBolo key={bolo.id} bolo={bolo} alPulsar={abrirEdicion} />
+                <TarjetaBolo
+                  key={bolo.id}
+                  bolo={bolo}
+                  alPulsar={abrirEdicion}
+                  salas={props.salas}
+                  mostrarCamino
+                />
               ))}
             </div>
 
@@ -266,6 +272,7 @@ export default function VistaCalendario(props: Propiedades) {
         <ListaAgenda
           bolos={props.bolos}
           hoy={props.hoy}
+          salas={props.salas}
           alPulsarBolo={abrirEdicion}
         />
       )}

@@ -17,7 +17,7 @@ export default async function PaginaSalas() {
     supabase.from("salas").select("*").order("nombre", { ascending: true }),
     supabase
       .from("bolos")
-      .select("ubicacion, precio, comision_porcentaje, estado, fecha, hora_inicio, hora_fin")
+      .select("ubicacion, direccion, precio, comision_porcentaje, estado, fecha, hora_inicio, hora_fin")
       .not("ubicacion", "is", null)
       .limit(2000),
   ]);

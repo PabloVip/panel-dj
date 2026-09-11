@@ -7,6 +7,8 @@ export type Bolo = {
   usuario_id: string;
   nombre: string;
   ubicacion: string | null;
+  // Dirección concreta de esa noche; si está vacía se usa la de la sala
+  direccion: string | null;
   fecha: string; // formato AAAA-MM-DD
   hora_inicio: string | null; // formato HH:MM:SS
   hora_fin: string | null;
@@ -25,6 +27,7 @@ export type Sala = {
   id: string;
   usuario_id: string;
   nombre: string;
+  direccion: string | null;
   contacto: string | null;
   telefono: string | null;
   cache_habitual: number;

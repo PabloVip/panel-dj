@@ -11,6 +11,8 @@ type BoloDelCalendario = {
   id: string;
   nombre: string;
   ubicacion: string | null;
+  direccion: string | null;
+  telefono: string | null;
   fecha: string;
   hora_inicio: string | null;
   hora_fin: string | null;
@@ -136,12 +138,21 @@ export async function GET(
     }
     lineas.push("SUMMARY:" + escapar(titulo));
 
-    if (bolo.ubicacion !== null && bolo.ubicacion !== "") {
-      lineas.push("LOCATION:" + escapar(bolo.ubicacion));
+    // La dirección completa es lo que permite que Mapas trace la ruta y
+    // que el coche pueda navegar al bolo desde el propio calendario
+    let lugar = bolo.direccion;
+    if (lugar === null || lugar === "") {
+      lugar = bolo.ubicacion;
+    }
+    if (lugar !== null && lugar !== "") {
+      lineas.push("LOCATION:" + escapar(lugar));
     }
 
     const descripcion = [];
     descripcion.push("Caché: " + Number(bolo.precio).toFixed(2) + " EUR");
+    if (bolo.telefono !== null && bolo.telefono !== "") {
+      descripcion.push("Contacto: " + bolo.telefono);
+    }
     if (bolo.notas !== null && bolo.notas !== "") {
       descripcion.push(bolo.notas);
     }
@@ -151,6 +162,15 @@ export async function GET(
       lineas.push("STATUS:TENTATIVE");
     } else {
       lineas.push("STATUS:CONFIRMED");
+    }
+
+    // Aviso tres horas antes, que es cuando toca cargar el coche
+    if (bolo.hora_inicio !== null) {
+      lineas.push("BEGIN:VALARM");
+      lineas.push("ACTION:DISPLAY");
+      lineas.push("DESCRIPTION:" + escapar(titulo));
+      lineas.push("TRIGGER:-PT3H");
+      lineas.push("END:VALARM");
     }
 
     lineas.push("END:VEVENT");

@@ -32,7 +32,13 @@ Next.js 15 (App Router) + TypeScript + Tailwind + Supabase (base de datos y logi
   caché habitual y comisión. Al escribir la ubicación de un bolo se rellena solo
   el caché de esa sala, y cada ficha enseña el histórico: bolos, neto y media.
 - **Calendario en el móvil**: una dirección secreta a la que te suscribes una vez
-  desde el iPhone; los bolos aparecen en la app Calendario y se actualizan solos.
+  desde el iPhone; los bolos aparecen en la app Calendario con su dirección, su
+  contacto y un aviso tres horas antes, y se actualizan solos. Como el evento
+  lleva la dirección, el coche puede navegar hasta el bolo desde CarPlay.
+- **Cómo llegar y llamar**: cada sala guarda su dirección y su teléfono, y cada
+  bolo puede tener una dirección propia si esa noche tocas en otro sitio. Desde
+  la app se abre Mapas con la ruta o se llama al contacto de un toque. Si hay
+  bolo hoy, aparece el primero en la pantalla de inicio con esos dos botones.
 - **Exportar a CSV**: descarga de los bolos filtrados, con bruto, comisión y neto,
   lista para Excel o Numbers.
 - **PWA**: se instala en el iPhone desde Safari (*Compartir > Añadir a pantalla de
@@ -47,8 +53,8 @@ Next.js 15 (App Router) + TypeScript + Tailwind + Supabase (base de datos y logi
    Si ya habías creado la tabla con una versión anterior, ejecuta además
    `supabase/migracion-cobros.sql` (fecha de cobro),
    `supabase/migracion-comision.sql` (comisión de manager) y
-   `supabase/migracion-salas-y-calendario.sql` (salas y calendario del móvil),
-   en ese orden.
+   `supabase/migracion-salas-y-calendario.sql` (salas y calendario del móvil) y
+   `supabase/migracion-direcciones.sql` (direcciones para navegar), en ese orden.
 3. Ve a **Authentication > Users > Add user** y crea tu usuario con correo y
    contraseña. Marca la opción de confirmar el correo automáticamente.
    El registro público no existe en la aplicación: solo se entra con este usuario.

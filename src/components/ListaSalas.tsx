@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import FormularioSala from "./FormularioSala";
+import BotonesDeCamino from "./BotonesDeCamino";
 import { formatearEuros, formatearFechaCorta } from "@/lib/formato";
 import type { Sala } from "@/lib/tipos";
 
@@ -126,6 +127,10 @@ export default function ListaSalas(props: Propiedades) {
                 <p className="mt-1 text-sm text-textoSecundario">{sala.telefono}</p>
               )}
 
+              {sala.direccion !== null && (
+                <p className="mt-1 text-xs text-textoSecundario">{sala.direccion}</p>
+              )}
+
               <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-textoSecundario">
                 <span>
                   <dt className="inline">Caché: </dt>
@@ -172,6 +177,11 @@ export default function ListaSalas(props: Propiedades) {
               {sala.notas !== null && (
                 <p className="mt-3 text-xs text-textoSecundario">{sala.notas}</p>
               )}
+
+              <BotonesDeCamino
+                direccion={sala.direccion}
+                telefono={sala.telefono}
+              />
 
               <Link
                 href={"/bolos?busqueda=" + encodeURIComponent(sala.nombre)}

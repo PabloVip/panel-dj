@@ -60,6 +60,13 @@ export default function FormularioBolo(props: Propiedades) {
     return props.bolo.ubicacion ?? "";
   });
 
+  const [direccion, establecerDireccion] = useState(() => {
+    if (props.bolo === null) {
+      return "";
+    }
+    return props.bolo.direccion ?? "";
+  });
+
   // Al escribir una ubicación que coincide con una sala guardada se
   // rellena el caché, pero solo si el precio todavía está vacío: nunca
   // se pisa un importe que ya hayas puesto.
@@ -161,6 +168,20 @@ export default function FormularioBolo(props: Propiedades) {
     });
   }
 
+  // Dirección que se usará si este campo se deja vacío: la de la sala
+  let direccionDeLaSala = "";
+  const nombreBuscado = ubicacion.trim().toLowerCase();
+  for (const sala of props.salas) {
+    if (sala.nombre.trim().toLowerCase() === nombreBuscado) {
+      direccionDeLaSala = sala.direccion ?? "";
+    }
+  }
+
+  let pistaDireccion = "Se usará la ubicación tal cual para navegar";
+  if (direccionDeLaSala !== "") {
+    pistaDireccion = "Si lo dejas vacío se usa la de la sala: " + direccionDeLaSala;
+  }
+
   // Neto que se enseña mientras se rellena el formulario
   let precioCalculado = Number(precio);
   if (Number.isNaN(precioCalculado) === true) {
@@ -257,6 +278,21 @@ export default function FormularioBolo(props: Propiedades) {
                 <option key={sala.id} value={sala.nombre} />
               ))}
             </datalist>
+          </div>
+
+          <div>
+            <label className="etiqueta" htmlFor="direccion">
+              Dirección (opcional)
+            </label>
+            <input
+              id="direccion"
+              name="direccion"
+              className="campo"
+              value={direccion}
+              onChange={(evento) => establecerDireccion(evento.target.value)}
+              placeholder={direccionDeLaSala}
+            />
+            <p className="mt-1 text-xs text-textoSecundario">{pistaDireccion}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
