@@ -7,70 +7,74 @@
 -- la propia base de datos se niegue a devolver nada si la sesión no ha
 -- pasado el segundo paso.
 --
--- Son políticas "restrictive": se suman a las que ya hay, no las
--- sustituyen. Y están escritas para NO dejarte fuera: mientras no tengas
--- configurada la verificación, la sesión normal sigue funcionando; en
--- cuanto la configures, pasa a ser obligatoria.
+-- Se puede ejecutar las veces que haga falta: borra y recrea lo suyo.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
--- Bolos
+-- 1. Una función que responde a una sola pregunta: ¿este usuario tiene
+--    la verificación en dos pasos configurada?
+--
+--    Va aparte a propósito. La lista de factores vive en el esquema
+--    interno de Supabase, al que tu usuario no tiene (ni debe tener)
+--    acceso. Esta función se ejecuta con permisos elevados pero solo
+--    mira TUS factores y solo devuelve un sí o un no.
 -- ---------------------------------------------------------------------
+create or replace function public.tiene_verificacion_en_dos_pasos()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1
+    from auth.mfa_factors
+    where user_id = auth.uid()
+      and status = 'verified'
+  );
+$$;
+
+revoke all on function public.tiene_verificacion_en_dos_pasos() from public;
+grant execute on function public.tiene_verificacion_en_dos_pasos() to authenticated;
+
+-- ---------------------------------------------------------------------
+-- 2. Las políticas
+--
+--    La condición se lee así: "pasa si NO tienes la verificación puesta
+--    (para no dejarte fuera antes de configurarla), o si la tienes y esta
+--    sesión ya ha metido el código".
+--
+--    Son "restrictive": se suman a las que ya hay, no las sustituyen.
+-- ---------------------------------------------------------------------
+
 drop policy if exists "Exigir verificacion en dos pasos" on public.bolos;
 create policy "Exigir verificacion en dos pasos"
   on public.bolos
   as restrictive
   to authenticated
   using (
-    array[(select auth.jwt() ->> 'aal')] <@ (
-      select
-        case
-          when count(id) > 0 then array['aal2']
-          else array['aal1', 'aal2']
-        end
-      from auth.mfa_factors
-      where user_id = auth.uid() and status = 'verified'
-    )
+    public.tiene_verificacion_en_dos_pasos() = false
+    or (select auth.jwt() ->> 'aal') = 'aal2'
   );
 
--- ---------------------------------------------------------------------
--- Salas
--- ---------------------------------------------------------------------
 drop policy if exists "Exigir verificacion en dos pasos" on public.salas;
 create policy "Exigir verificacion en dos pasos"
   on public.salas
   as restrictive
   to authenticated
   using (
-    array[(select auth.jwt() ->> 'aal')] <@ (
-      select
-        case
-          when count(id) > 0 then array['aal2']
-          else array['aal1', 'aal2']
-        end
-      from auth.mfa_factors
-      where user_id = auth.uid() and status = 'verified'
-    )
+    public.tiene_verificacion_en_dos_pasos() = false
+    or (select auth.jwt() ->> 'aal') = 'aal2'
   );
 
--- ---------------------------------------------------------------------
--- Ajustes (la clave del calendario)
--- ---------------------------------------------------------------------
 drop policy if exists "Exigir verificacion en dos pasos" on public.ajustes;
 create policy "Exigir verificacion en dos pasos"
   on public.ajustes
   as restrictive
   to authenticated
   using (
-    array[(select auth.jwt() ->> 'aal')] <@ (
-      select
-        case
-          when count(id) > 0 then array['aal2']
-          else array['aal1', 'aal2']
-        end
-      from auth.mfa_factors
-      where user_id = auth.uid() and status = 'verified'
-    )
+    public.tiene_verificacion_en_dos_pasos() = false
+    or (select auth.jwt() ->> 'aal') = 'aal2'
   );
 
 -- ---------------------------------------------------------------------
@@ -84,7 +88,10 @@ create policy "Exigir verificacion en dos pasos"
 -- Comprobaciones
 -- ---------------------------------------------------------------------
 
--- 1) Las tres tablas tienen que tener la seguridad de filas ACTIVADA.
+-- 1) La función responde sin error (false si aún no la has activado)
+select public.tiene_verificacion_en_dos_pasos() as tengo_dos_pasos;
+
+-- 2) Las tres tablas tienen que tener la seguridad de filas ACTIVADA.
 --    Si alguna sale en "false", las políticas no sirven de nada: ejecuta
 --    entonces  alter table public.<tabla> enable row level security;
 select
@@ -93,8 +100,10 @@ select
 from pg_class
 where relname in ('bolos', 'salas', 'ajustes');
 
--- 2) Qué factores de verificación tienes configurados ahora mismo
-select
-  count(*) filter (where status = 'verified') as factores_activos,
-  count(*) as factores_totales
-from auth.mfa_factors;
+-- =====================================================================
+-- PARA DESHACERLO TODO, si algo va mal y quieres volver atrás:
+--
+--   drop policy if exists "Exigir verificacion en dos pasos" on public.bolos;
+--   drop policy if exists "Exigir verificacion en dos pasos" on public.salas;
+--   drop policy if exists "Exigir verificacion en dos pasos" on public.ajustes;
+-- =====================================================================
