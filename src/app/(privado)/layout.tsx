@@ -15,6 +15,15 @@ export default async function LayoutPrivado(props: { children: React.ReactNode }
     redirect("/login");
   }
 
+  // Si tienes activada la verificación en dos pasos y la sesión todavía no
+  // ha pasado ese segundo paso, no se entra a ninguna pantalla privada.
+  const nivel = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (nivel.data !== null) {
+    if (nivel.data.nextLevel === "aal2" && nivel.data.currentLevel !== "aal2") {
+      redirect("/verificar");
+    }
+  }
+
   return (
     <div className="min-h-screen pb-[calc(4rem+var(--seguro-abajo))] sm:pb-0">
       <header className="zona-segura-arriba sticky top-0 z-30 border-b border-borde bg-superficie/95 backdrop-blur">

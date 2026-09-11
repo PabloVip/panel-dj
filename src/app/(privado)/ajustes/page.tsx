@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import EnlaceCalendario from "@/components/EnlaceCalendario";
+import SeguridadCuenta from "@/components/SeguridadCuenta";
 import { crearClienteServidor } from "@/lib/supabase/servidor";
 
 export const metadata: Metadata = {
@@ -53,6 +54,8 @@ export default async function PaginaAjustes() {
           Calendario del móvil y copias de tus datos.
         </p>
       </header>
+
+      <SeguridadCuenta />
 
       <section className="rounded-2xl border border-borde bg-superficie p-5">
         <h2 className="text-sm font-medium">Calendario en el móvil</h2>
