@@ -75,8 +75,8 @@ export default function FormularioSala(props: Propiedades) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4">
-      <section className="my-8 w-full max-w-lg rounded-2xl border border-borde bg-superficie p-6">
+    <div className="ventana-emergente fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 px-4">
+      <section className="my-4 w-full max-w-lg rounded-2xl border border-borde bg-superficie p-6 sm:my-8">
         <header className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">{titulo}</h2>
           <button

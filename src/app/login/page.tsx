@@ -39,7 +39,7 @@ export default function PaginaLogin() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
+    <main className="zona-segura-arriba zona-segura-abajo flex min-h-screen items-center justify-center px-4 py-6">
       <section className="w-full max-w-sm rounded-2xl border border-borde bg-superficie p-8">
         <p className="text-xs uppercase tracking-[0.2em] text-acentoSuave">
           Acceso privado

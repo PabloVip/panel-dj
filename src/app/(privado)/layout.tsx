@@ -16,8 +16,8 @@ export default async function LayoutPrivado(props: { children: React.ReactNode }
   }
 
   return (
-    <div className="min-h-screen pb-16 sm:pb-0">
-      <header className="sticky top-0 z-30 border-b border-borde bg-superficie/95 backdrop-blur">
+    <div className="min-h-screen pb-[calc(4rem+var(--seguro-abajo))] sm:pb-0">
+      <header className="zona-segura-arriba sticky top-0 z-30 border-b border-borde bg-superficie/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-6">
             <span className="text-sm font-semibold uppercase tracking-[0.2em] text-acentoSuave">

@@ -2,11 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Zonas que el iPhone se reserva: la isla dinámica arriba, la barra de
+   gestos abajo y los bordes redondeados en horizontal. En un ordenador
+   valen cero, así que estas medidas no afectan al diseño de escritorio. */
+:root {
+  --seguro-arriba: env(safe-area-inset-top, 0px);
+  --seguro-abajo: env(safe-area-inset-bottom, 0px);
+  --seguro-izquierda: env(safe-area-inset-left, 0px);
+  --seguro-derecha: env(safe-area-inset-right, 0px);
+}
+
 body {
   background-color: #0b0b12;
   color: #f4f4f8;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  /* En horizontal el contenido no se mete bajo la curva de la pantalla */
+  padding-left: var(--seguro-izquierda);
+  padding-right: var(--seguro-derecha);
+}
+
+/* La cabecera se pega arriba del todo: su fondo tiene que llegar hasta
+   el borde de la pantalla, pero su contenido empieza bajo la isla. */
+.zona-segura-arriba {
+  padding-top: var(--seguro-arriba);
+}
+
+.zona-segura-abajo {
+  padding-bottom: var(--seguro-abajo);
+}
+
+/* Las ventanas emergentes tienen que dejar sitio arriba y abajo para que
+   ni el botón de cerrar ni el de guardar queden bajo la isla o los gestos */
+.ventana-emergente {
+  padding-top: calc(var(--seguro-arriba) + 1rem);
+  padding-bottom: calc(var(--seguro-abajo) + 1rem);
 }
 
 /* Los campos de formulario comparten el mismo aspecto en toda la app */

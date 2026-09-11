@@ -31,7 +31,7 @@ export default function BarraInferior() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-borde bg-superficie pb-[env(safe-area-inset-bottom)] sm:hidden">
+    <nav className="zona-segura-abajo fixed bottom-0 left-0 right-0 z-40 border-t border-borde bg-superficie sm:hidden">
       <div className="flex">
         {ENLACES.map((enlace) => {
           let clases =

@@ -3,7 +3,7 @@ import Link from "next/link";
 // Página que se muestra cuando la dirección no existe
 export default function NoEncontrada() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
+    <main className="zona-segura-arriba zona-segura-abajo flex min-h-screen items-center justify-center px-4 py-6">
       <section className="w-full max-w-sm rounded-2xl border border-borde bg-superficie p-8 text-center">
         <p className="text-xs uppercase tracking-[0.2em] text-acentoSuave">
           Error 404
