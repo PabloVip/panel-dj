@@ -71,13 +71,22 @@ export default async function PaginaInicio() {
 
   const supabase = await crearClienteServidor();
 
-  // Tres consultas independientes, lanzadas a la vez
+  // La consulta tiene que abarcar el año entero (para el total del año) y
+  // además el mes anterior, que en enero cae en el año pasado.
+  let desdeCuando = claveFecha(anio, 1, 1);
+  const primeroDelMesAnterior = claveFecha(anterior.anio, anterior.mes, 1);
+  if (primeroDelMesAnterior < desdeCuando) {
+    desdeCuando = primeroDelMesAnterior;
+  }
+
+  // Cuatro consultas independientes, lanzadas a la vez
   const [respuestaAnio, respuestaProximos, respuestaSinCobrar, respuestaSalas] = await Promise.all([
     supabase
       .from("bolos")
       .select("*")
-      .gte("fecha", claveFecha(anterior.anio, anterior.mes, 1))
-      .lte("fecha", claveFecha(anio, 12, 31)),
+      .gte("fecha", desdeCuando)
+      .lte("fecha", claveFecha(anio, 12, 31))
+      .limit(2000),
     supabase
       .from("bolos")
       .select("*")
