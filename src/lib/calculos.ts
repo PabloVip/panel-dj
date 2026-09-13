@@ -27,6 +27,25 @@ export function tieneComision(bolo: Bolo): boolean {
   return Number(bolo.comision_porcentaje) > 0;
 }
 
+// ¿Ya le has pagado al manager la comisión de este bolo?
+export function comisionPagada(bolo: Bolo): boolean {
+  if (bolo.comision_pagada_el === null) {
+    return false;
+  }
+  return true;
+}
+
+// Lo que le debes al manager por este bolo ahora mismo
+export function comisionPendienteDe(bolo: Bolo): number {
+  if (bolo.estado === "cancelado") {
+    return 0;
+  }
+  if (comisionPagada(bolo) === true) {
+    return 0;
+  }
+  return comisionDe(bolo);
+}
+
 // Totales de una lista de bolos, sin contar los cancelados
 export type Totales = {
   bruto: number;

@@ -305,5 +305,6 @@ function revalidarPaginas() {
   revalidatePath("/calendario");
   revalidatePath("/bolos");
   revalidatePath("/cobros");
+  revalidatePath("/manager");
   revalidatePath("/estadisticas");
 }

@@ -8,6 +8,11 @@ export const metadata: Metadata = {
 
 const ENLACES = [
   {
+    ruta: "/manager",
+    titulo: "Manager",
+    detalle: "Su comisión mes a mes y lo que le debes",
+  },
+  {
     ruta: "/estadisticas",
     titulo: "Estadísticas",
     detalle: "Ganancias del año, comisiones y dónde ganas más",

@@ -13,7 +13,7 @@ const ENLACES = [
 ];
 
 // Pantallas que se consideran parte de "Más"
-const RUTAS_DE_MAS = ["/mas", "/salas", "/estadisticas", "/ajustes"];
+const RUTAS_DE_MAS = ["/mas", "/manager", "/salas", "/estadisticas", "/ajustes"];
 
 export default function BarraInferior() {
   const rutaActual = usePathname();

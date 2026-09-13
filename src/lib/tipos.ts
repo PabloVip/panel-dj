@@ -15,6 +15,9 @@ export type Bolo = {
   precio: number;
   // Porcentaje que se lleva el manager en ese bolo (0 = sin comisión)
   comision_porcentaje: number;
+  // Día en que le pagaste al manager la comisión de este bolo.
+  // Si es null, esa comisión sigue debiéndose.
+  comision_pagada_el: string | null;
   estado: EstadoBolo;
   cobrado: boolean;
   fecha_cobro: string | null;

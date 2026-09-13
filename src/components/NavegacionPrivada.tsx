@@ -8,6 +8,7 @@ const ENLACES = [
   { ruta: "/calendario", texto: "Calendario" },
   { ruta: "/bolos", texto: "Bolos" },
   { ruta: "/cobros", texto: "Cobros" },
+  { ruta: "/manager", texto: "Manager" },
   { ruta: "/salas", texto: "Salas" },
   { ruta: "/estadisticas", texto: "Estadísticas" },
   { ruta: "/ajustes", texto: "Ajustes" },
