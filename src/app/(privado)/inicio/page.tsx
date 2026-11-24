@@ -32,7 +32,6 @@ function Tarjeta(props: {
   titulo: string;
   valor: string;
   detalle: string;
-  tono: string;
   icono: LucideIcon;
   enlace?: string;
 }) {
@@ -40,9 +39,7 @@ function Tarjeta(props: {
 
   /* TARJETA DE COLOR */
   const clases =
-    "tarjeta-color tono-" +
-    props.tono +
-    " block rounded-2xl border border-borde bg-superficie p-4 sm:p-5";
+    "tarjeta-color tono-violeta block rounded-2xl border border-borde bg-superficie p-4 sm:p-5";
 
   const contenido = (
     <>
@@ -262,21 +259,18 @@ export default async function PaginaInicio() {
           titulo={"Ganas en " + nombreMes(mes).toLowerCase()}
           valor={formatearEuros(ingresosMes)}
           detalle={detalleMes}
-          tono="violeta"
           icono={TrendingUp}
         />
         <Tarjeta
           titulo="Esta semana"
           valor={String(bolosSemana.length)}
           detalle={"Bolos entre el " + lunes.slice(8, 10) + " y el " + domingo.slice(8, 10)}
-          tono="azul"
           icono={CalendarDays}
         />
         <Tarjeta
           titulo="Pendiente de cobro"
           valor={formatearEuros(pendiente)}
           detalle={detalleCobros}
-          tono="ambar"
           icono={Wallet}
           enlace="/cobros"
         />
@@ -284,7 +278,6 @@ export default async function PaginaInicio() {
           titulo={"Total " + anio}
           valor={formatearEuros(ingresosAnio)}
           detalle={detalleAnio}
-          tono="verde"
           icono={ChartColumn}
         />
       </div>

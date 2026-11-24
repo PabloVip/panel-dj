@@ -126,14 +126,6 @@ a.bg-acento {
   --tono: 56 189 248;
 }
 
-.tono-ambar {
-  --tono: 251 146 60;
-}
-
-.tono-verde {
-  --tono: 52 211 153;
-}
-
 .tarjeta-color {
   border-color: rgb(var(--tono) / 0.35);
   background-image:
