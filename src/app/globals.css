@@ -2,28 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Zonas que el iPhone se reserva: la isla dinámica arriba, la barra de
-   gestos abajo y los bordes redondeados en horizontal. En un ordenador
-   valen cero, así que estas medidas no afectan al diseño de escritorio. */
+/* ZONAS SEGURAS (iPhone) */
 :root {
   --seguro-arriba: env(safe-area-inset-top, 0px);
   --seguro-abajo: env(safe-area-inset-bottom, 0px);
   --seguro-izquierda: env(safe-area-inset-left, 0px);
   --seguro-derecha: env(safe-area-inset-right, 0px);
+  color-scheme: dark;
+}
+
+html {
+  background-color: #08070f;
 }
 
 body {
-  background-color: #0b0b12;
-  color: #f4f4f8;
+  min-height: 100vh;
+  color: #f5f5fa;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
-  /* En horizontal el contenido no se mete bajo la curva de la pantalla */
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   padding-left: var(--seguro-izquierda);
   padding-right: var(--seguro-derecha);
 }
 
-/* La cabecera se pega arriba del todo: su fondo tiene que llegar hasta
-   el borde de la pantalla, pero su contenido empieza bajo la isla. */
+::selection {
+  background-color: rgba(139, 92, 246, 0.45);
+}
+
+/* FONDO AMBIENTAL */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 12% 8%, rgba(139, 92, 246, 0.38), transparent 70%),
+    radial-gradient(45% 40% at 92% 12%, rgba(56, 189, 248, 0.22), transparent 70%),
+    radial-gradient(60% 45% at 78% 100%, rgba(251, 146, 60, 0.26), transparent 70%),
+    radial-gradient(45% 40% at 5% 95%, rgba(236, 72, 153, 0.20), transparent 70%),
+    linear-gradient(165deg, #100d24 0%, #09080f 50%, #140c14 100%);
+}
+
 .zona-segura-arriba {
   padding-top: var(--seguro-arriba);
 }
@@ -32,41 +53,152 @@ body {
   padding-bottom: var(--seguro-abajo);
 }
 
-/* Las ventanas emergentes tienen que dejar sitio arriba y abajo para que
-   ni el botón de cerrar ni el de guardar queden bajo la isla o los gestos */
+/* VIDRIO */
+.bg-superficie {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 32px -14px rgba(0, 0, 0, 0.6);
+}
+
+.bg-superficie:not(:has(.ventana-emergente)) {
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+}
+
+/* BARRAS FLOTANTES */
+.vidrio-barra {
+  background-color: rgba(18, 16, 34, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 16px 40px -16px rgba(0, 0, 0, 0.75);
+}
+
+.cabecera-flotante {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(8, 7, 15, 0.9) 0%,
+    rgba(8, 7, 15, 0.55) 55%,
+    rgba(8, 7, 15, 0) 100%
+  );
+}
+
+.sin-barra {
+  scrollbar-width: none;
+}
+
+.sin-barra::-webkit-scrollbar {
+  display: none;
+}
+
+/* BOTONES */
+.bg-acento {
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0) 65%
+  );
+}
+
+button.bg-acento,
+a.bg-acento {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 20px -8px rgba(139, 92, 246, 0.85);
+}
+
+/* HOVER TARJETAS */
+@media (hover: hover) {
+  a.bg-superficie:hover,
+  a.bg-fondo:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* TONOS */
+.tono-violeta {
+  --tono: 139 92 246;
+}
+
+.tono-azul {
+  --tono: 56 189 248;
+}
+
+.tono-ambar {
+  --tono: 251 146 60;
+}
+
+.tono-verde {
+  --tono: 52 211 153;
+}
+
+.tarjeta-color {
+  border-color: rgb(var(--tono) / 0.35);
+  background-image:
+    radial-gradient(120% 90% at 0% 0%, rgb(var(--tono) / 0.32), transparent 60%),
+    linear-gradient(180deg, rgb(var(--tono) / 0.08), transparent);
+}
+
+.chip-color {
+  background-image: linear-gradient(135deg, rgb(var(--tono) / 0.95), rgb(var(--tono) / 0.55));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 16px -6px rgb(var(--tono) / 0.9);
+}
+
+/* MODALES */
 .ventana-emergente {
   padding-top: calc(var(--seguro-arriba) + 1rem);
   padding-bottom: calc(var(--seguro-abajo) + 1rem);
+  background-color: rgba(6, 5, 14, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
-/* Los campos de formulario comparten el mismo aspecto en toda la app */
+.ventana-emergente > .bg-superficie {
+  background-color: rgba(22, 20, 40, 0.82);
+}
+
+/* CAMPOS */
 .campo {
   width: 100%;
-  /* 16px evita que iOS haga zoom automático al enfocar el campo */
   font-size: 16px;
-  border-radius: 0.5rem;
-  border: 1px solid #2a2a3d;
-  background-color: #0b0b12;
-  padding: 0.5rem 0.75rem;
-  color: #f4f4f8;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.55rem 0.8rem;
+  color: #f5f5fa;
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.campo::placeholder {
+  color: rgba(235, 235, 245, 0.35);
 }
 
 .campo:focus {
-  border-color: #8b5cf6;
+  border-color: rgba(167, 139, 250, 0.8);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
 }
 
 .etiqueta {
   display: block;
   margin-bottom: 0.25rem;
   font-size: 0.8rem;
-  color: #a3a3b8;
+  color: rgba(235, 235, 245, 0.62);
 }
 
-/* El selector nativo de fecha y hora se ve negro sobre negro sin esto */
+select option,
+select optgroup {
+  background-color: #17152b;
+  color: #f5f5fa;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: pointer;
 }

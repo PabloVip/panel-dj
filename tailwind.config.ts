@@ -5,15 +5,15 @@ const configuracion: Config = {
   theme: {
     extend: {
       colors: {
-        // Paleta propia del panel: fondos oscuros y un acento violeta
-        fondo: "#0b0b12",
-        superficie: "#14141f",
-        superficieAlta: "#1c1c2b",
-        borde: "#2a2a3d",
+        // Paleta glass: superficies translúcidas sobre el fondo ambiental
+        fondo: "rgba(0, 0, 0, 0.22)",
+        superficie: "rgba(255, 255, 255, 0.06)",
+        superficieAlta: "rgba(255, 255, 255, 0.12)",
+        borde: "rgba(255, 255, 255, 0.10)",
         acento: "#8b5cf6",
         acentoSuave: "#a78bfa",
-        textoPrincipal: "#f4f4f8",
-        textoSecundario: "#a3a3b8",
+        textoPrincipal: "#f5f5fa",
+        textoSecundario: "rgba(235, 235, 245, 0.62)",
       },
     },
   },

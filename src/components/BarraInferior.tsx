@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CalendarDays, Ellipsis, House, ListMusic, Wallet } from "lucide-react";
 
 // En el móvil solo caben cinco. El resto de pantallas vive en "Más".
 const ENLACES = [
-  { ruta: "/inicio", texto: "Inicio", icono: "◆" },
-  { ruta: "/calendario", texto: "Calendario", icono: "▦" },
-  { ruta: "/bolos", texto: "Bolos", icono: "☰" },
-  { ruta: "/cobros", texto: "Cobros", icono: "€" },
-  { ruta: "/mas", texto: "Más", icono: "⋯" },
+  { ruta: "/inicio", texto: "Inicio", icono: House },
+  { ruta: "/calendario", texto: "Calendario", icono: CalendarDays },
+  { ruta: "/bolos", texto: "Bolos", icono: ListMusic },
+  { ruta: "/cobros", texto: "Cobros", icono: Wallet },
+  { ruta: "/mas", texto: "Más", icono: Ellipsis },
 ];
 
 // Pantallas que se consideran parte de "Más"
@@ -31,21 +32,24 @@ export default function BarraInferior() {
   }
 
   return (
-    <nav className="zona-segura-abajo fixed bottom-0 left-0 right-0 z-40 border-t border-borde bg-superficie sm:hidden">
-      <div className="flex">
+    <nav className="vidrio-barra fixed inset-x-3 bottom-[calc(var(--seguro-abajo)+0.5rem)] z-40 mx-auto max-w-md rounded-[1.75rem] p-1.5 sm:hidden">
+      <div className="flex gap-1">
         {ENLACES.map((enlace) => {
+          const Icono = enlace.icono;
+
+          /* DOCK */
           let clases =
-            "flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] transition";
+            "flex flex-1 flex-col items-center gap-0.5 rounded-[1.25rem] py-1.5 text-[10px] font-medium transition active:scale-95";
 
           if (estaActivo(enlace.ruta) === true) {
-            clases = clases + " text-acentoSuave";
+            clases = clases + " bg-white/15 text-textoPrincipal shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]";
           } else {
             clases = clases + " text-textoSecundario";
           }
 
           return (
             <Link key={enlace.ruta} href={enlace.ruta} className={clases}>
-              <span className="text-base leading-none">{enlace.icono}</span>
+              <Icono size={21} strokeWidth={1.9} aria-hidden="true" />
               {enlace.texto}
             </Link>
           );

@@ -19,6 +19,8 @@ import { colorEstado } from "@/lib/estados";
 import { netoDe, tieneComision, totalesDe } from "@/lib/calculos";
 import { direccionDe, telefonoDe } from "@/lib/navegacion";
 import BotonesDeCamino from "@/components/BotonesDeCamino";
+import { CalendarDays, ChartColumn, TrendingUp, Wallet } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { Bolo, Sala } from "@/lib/tipos";
 
 export const metadata: Metadata = {
@@ -30,20 +32,29 @@ function Tarjeta(props: {
   titulo: string;
   valor: string;
   detalle: string;
-  destacada?: boolean;
+  tono: string;
+  icono: LucideIcon;
   enlace?: string;
 }) {
-  let clases = "block rounded-2xl border border-borde bg-superficie p-5";
-  if (props.destacada === true) {
-    clases = "block rounded-2xl border border-acento/40 bg-acento/5 p-5";
-  }
+  const Icono = props.icono;
+
+  /* TARJETA DE COLOR */
+  const clases =
+    "tarjeta-color tono-" +
+    props.tono +
+    " block rounded-2xl border border-borde bg-superficie p-4 sm:p-5";
 
   const contenido = (
     <>
-      <p className="text-xs uppercase tracking-wider text-textoSecundario">
-        {props.titulo}
-      </p>
-      <p className="mt-2 text-2xl font-semibold">{props.valor}</p>
+      <span className="flex items-start justify-between gap-3">
+        <span className="text-xs uppercase tracking-wider text-textoSecundario">
+          {props.titulo}
+        </span>
+        <span className="chip-color flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white sm:h-9 sm:w-9">
+          <Icono size={18} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+      </span>
+      <p className="mt-2 text-xl font-semibold tabular-nums sm:text-2xl">{props.valor}</p>
       <p className="mt-1 text-xs text-textoSecundario">{props.detalle}</p>
     </>
   );
@@ -58,7 +69,6 @@ function Tarjeta(props: {
 
   return <article className={clases}>{contenido}</article>;
 }
-
 
 export default async function PaginaInicio() {
   const hoy = fechaDeHoy();
@@ -247,28 +257,35 @@ export default async function PaginaInicio() {
         </article>
       ))}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Tarjeta
           titulo={"Ganas en " + nombreMes(mes).toLowerCase()}
           valor={formatearEuros(ingresosMes)}
           detalle={detalleMes}
-          destacada
+          tono="violeta"
+          icono={TrendingUp}
         />
         <Tarjeta
           titulo="Esta semana"
           valor={String(bolosSemana.length)}
           detalle={"Bolos entre el " + lunes.slice(8, 10) + " y el " + domingo.slice(8, 10)}
+          tono="azul"
+          icono={CalendarDays}
         />
         <Tarjeta
           titulo="Pendiente de cobro"
           valor={formatearEuros(pendiente)}
           detalle={detalleCobros}
+          tono="ambar"
+          icono={Wallet}
           enlace="/cobros"
         />
         <Tarjeta
           titulo={"Total " + anio}
           valor={formatearEuros(ingresosAnio)}
           detalle={detalleAnio}
+          tono="verde"
+          icono={ChartColumn}
         />
       </div>
 
