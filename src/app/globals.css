@@ -38,11 +38,10 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(55% 45% at 12% 8%, rgba(139, 92, 246, 0.38), transparent 70%),
-    radial-gradient(45% 40% at 92% 12%, rgba(56, 189, 248, 0.22), transparent 70%),
-    radial-gradient(60% 45% at 78% 100%, rgba(251, 146, 60, 0.26), transparent 70%),
-    radial-gradient(45% 40% at 5% 95%, rgba(236, 72, 153, 0.20), transparent 70%),
-    linear-gradient(165deg, #100d24 0%, #09080f 50%, #140c14 100%);
+    radial-gradient(55% 45% at 10% 5%, rgba(139, 92, 246, 0.30), transparent 70%),
+    radial-gradient(40% 35% at 95% 10%, rgba(167, 139, 250, 0.10), transparent 70%),
+    radial-gradient(50% 40% at 85% 100%, rgba(124, 58, 237, 0.16), transparent 70%),
+    linear-gradient(165deg, #0d0b19 0%, #08070e 55%, #0a0812 100%);
 }
 
 .zona-segura-arriba {
@@ -124,6 +123,14 @@ a.bg-acento {
 
 .tono-azul {
   --tono: 56 189 248;
+}
+
+.tono-ambar {
+  --tono: 251 146 60;
+}
+
+.tono-verde {
+  --tono: 52 211 153;
 }
 
 .tarjeta-color {
