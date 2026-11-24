@@ -37,11 +37,7 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(55% 45% at 10% 5%, rgba(139, 92, 246, 0.30), transparent 70%),
-    radial-gradient(40% 35% at 95% 10%, rgba(167, 139, 250, 0.10), transparent 70%),
-    radial-gradient(50% 40% at 85% 100%, rgba(124, 58, 237, 0.16), transparent 70%),
-    linear-gradient(165deg, #0d0b19 0%, #08070e 55%, #0a0812 100%);
+  background: linear-gradient(165deg, #0d0b19 0%, #08070e 55%, #0a0812 100%);
 }
 
 .zona-segura-arriba {
